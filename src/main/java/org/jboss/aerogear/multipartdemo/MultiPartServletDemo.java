@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.IOException;
+import java.io.*;
 
 @WebServlet(name = "MultiPartServletDemo", urlPatterns = {"/upload"})
 @MultipartConfig()
@@ -39,6 +39,27 @@ public class MultiPartServletDemo extends HttpServlet {
             System.out.print("Header Names:");
             for (String name : p.getHeaderNames()) {
                 System.out.print(" " + name);
+            }
+
+            OutputStream out = null;
+            InputStream filecontent = null;
+
+            try {
+                out = new FileOutputStream(new File("/Users/cvasilak/Desktop" + File.separator
+                        +  p.getName()));
+                filecontent = p.getInputStream();
+
+                int read = 0;
+                final byte[] bytes = new byte[1024];
+
+                while ((read = filecontent.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+
+                out.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             System.out.println();
